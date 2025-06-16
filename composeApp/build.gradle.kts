@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
+    alias(libs.plugins.kotlinx.rpc)
 }
 
 kotlin {
@@ -56,9 +57,15 @@ kotlin {
     sourceSets {
         val desktopMain by getting
 
+        wasmJsMain.dependencies {
+            implementation(libs.ktor.client.js)
+        }
+
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.ktor.client.cio)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -70,6 +77,14 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(projects.shared)
+
+            implementation(libs.kotlinx.coroutines.core)
+
+            implementation(libs.kotlinx.rpc.krpc.client)
+            implementation(libs.kotlinx.rpc.krpc.serialization.json)
+            implementation(libs.kotlinx.rpc.krpc.ktor.client)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.websockets)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -77,6 +92,12 @@ kotlin {
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
+            implementation(libs.ktor.client.cio)
+
+        }
+
+        iosMain.dependencies {
+            implementation(libs.ktor.client.cio)
         }
     }
 }
