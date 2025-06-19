@@ -1,20 +1,52 @@
 package com.example.kmprpc
 
+import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-import io.ktor.server.response.*
+import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.routing.*
+import kotlinx.rpc.krpc.ktor.server.Krpc
+import kotlinx.rpc.krpc.ktor.server.rpc
+import kotlinx.rpc.krpc.serialization.json.json
 
-fun main() {
-    embeddedServer(Netty, port = SERVER_PORT, host = "0.0.0.0", module = Application::module)
-        .start(wait = true)
+fun main(args: Array<String>): Unit = EngineMain.main(args)
+
+@Suppress("unused")
+fun Application.module() {
+    install(Krpc)
+
+    installCORS()
+
+    routing {
+        rpc("/api") {
+            rpcConfig {
+                serialization {
+                    json()
+                }
+            }
+
+            registerService<NewsService> { ctx -> NewsServiceImpl(ctx) }
+        }
+    }
 }
 
-fun Application.module() {
-    routing {
-        get("/") {
-            call.respondText("Ktor: ${Greeting().greet()}")
+fun Application.installCORS() {
+    install(CORS) {
+        allowMethod(HttpMethod.Options)
+        allowMethod(HttpMethod.Put)
+        allowMethod(HttpMethod.Delete)
+        allowMethod(HttpMethod.Patch)
+        allowHeader(HttpHeaders.Authorization)
+        allowHeader(HttpHeaders.AccessControlAllowOrigin)
+        allowHeader(HttpHeaders.Upgrade)
+        allowNonSimpleContentTypes = true
+        allowCredentials = true
+        allowSameOrigin = true
+
+        // webpack-dev-server and local development
+        val allowedHosts = listOf("localhost:3000", "localhost:8080", "localhost:8081", "127.0.0.1:8080")
+        allowedHosts.forEach { host ->
+            allowHost(host, listOf("http", "https", "ws", "wss"))
         }
     }
 }
