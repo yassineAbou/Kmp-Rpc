@@ -11,3 +11,4 @@ EXPOSE 8080
 RUN mkdir -p /app
 COPY --from=build /home/gradle/app/server/build/libs/*.jar /app/app.jar
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+

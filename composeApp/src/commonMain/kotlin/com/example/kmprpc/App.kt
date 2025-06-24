@@ -1,43 +1,26 @@
 package com.example.kmprpc
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
-import androidx.compose.material3.DividerDefaults
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import io.ktor.client.HttpClient
-import io.ktor.client.plugins.timeout
-import io.ktor.http.encodedPath
+import io.ktor.client.*
+import io.ktor.client.plugins.*
+import io.ktor.http.*
 import kotlinx.coroutines.delay
 import kotlinx.rpc.krpc.ktor.client.installKrpc
 import kotlinx.rpc.krpc.ktor.client.rpc
 import kotlinx.rpc.krpc.ktor.client.rpcConfig
 import kotlinx.rpc.krpc.serialization.json.json
-import kotlinx.rpc.krpc.streamScoped
 import kotlinx.rpc.withService
 
-const val DEV_SERVER_HOST: String = "192.168.1.111"
+const val DEV_SERVER_HOST: String = "10.0.2.2"
 
 val client by lazy {
     HttpClient {
